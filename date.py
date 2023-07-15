@@ -1,9 +1,16 @@
-### custom date class
 class date:
     months = ['default','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October'\
              ,'November', 'December']
-    
+        
     def __init__(self,day=0,month=0,year=0,format='%d/%m/%y', word=False):
+        assert type(day) == type(1), "day must be an integer"
+        assert type(month) == type(1), "month must be an integer"
+        assert type(year) == type(1), "year must be an integer"
+
+        assert type(format) == type("string"), "format parameter must be a string"
+        assert len(format) == 8, "length of format parameter must be 8 characters"
+
+
         self.__day, self.__month, self.__year = self.__validate(day,month,year)
         self.format = format
         self.__word = word
@@ -23,15 +30,11 @@ class date:
     
     def __str__(self):
         
-        if self.__day == 0 and self.__month == 0 and self.__year == 0:
-            return '0 CE'
-        
         if self.__word:
             return self.months[int(self.__month)] + ' ' + self.__day + self.__dayh(str(self.__day)[-1]) + ', ' + self.__year
         return self.__day + self.format[2] + self.__month + self.format[5] +self.__year
     
     def __validate(self,dd,mm,yy):
-        dd, mm, yy = dd,mm,yy
         
         ####validations follow####
         if len(str(dd)) > 2:
@@ -40,8 +43,8 @@ class date:
         if len(str(mm)) > 2:
             raise ValueError('Invalid month value. Length exceeded.')
         
-        if len(str(yy)) < 4:
-            raise ValueError('Invalid year value. Length exceeded.')
+        # if len(str(yy)) < 4:
+        #     raise ValueError('Invalid year value. Length exceeded.')
             
         max1=0
         if(mm==1 or mm==3 or mm==5 or mm==7 or mm==8 or mm==10 or mm==12):
@@ -120,3 +123,16 @@ class date:
         
         self.__evaluate_date()
         
+
+    def to_date(value, format='%d/%m/%y'):
+        """
+            Convert the date in string to date format
+        """
+        
+        if format[2] not in value:
+            raise ValueError("wrong format in string. Use correct `format`.")
+        
+        d, m, y = value.split(format[2])
+        newd = date(int(d), int(m), int(y), format=format)
+
+        return newd
