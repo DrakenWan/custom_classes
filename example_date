@@ -1,4 +1,0 @@
-import date
-
-x = date(1,2,1994, format="%d.%m.%y')
-print(x)
