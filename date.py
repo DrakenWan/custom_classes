@@ -109,6 +109,19 @@ class date:
             day   | 'd', 'day', 0
             month | 'm', 'month', 1
             year  | 'y', 'year', 2
+
+        EXAMPLE USAGE:-
+        Suppose you want to get the month value.
+            >>> x = date(19/2/1998)
+            >>> x['month']
+            [out]: '02'
+
+            >>> x['m']
+            [out]: '02'
+
+            >>> x[1]
+            [out]: '02'
+            
         """
         if key in ['d', 0, 'day', -3]:
             return self.__day
