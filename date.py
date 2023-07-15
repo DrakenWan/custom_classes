@@ -4,11 +4,11 @@ class date:
              ,'November', 'December']
     
     def __init__(self,day=0,month=0,year=0,format='%d/%m/%y', word=False):
-        self.day, self.month, self.year = self.validate(day,month,year)
+        self.__day, self.__month, self.__year = self.__validate(day,month,year)
         self.format = format
-        self.word = word
+        self.__word = word
         
-        self.evaluate_date()
+        self.__evaluate_date()
     
     
     def __dayh(self, digit):
@@ -23,13 +23,14 @@ class date:
     
     def __str__(self):
         
-        if self.day == 0 and self.month == 0 and self.year == 0:
+        if self.__day == 0 and self.__month == 0 and self.__year == 0:
             return '0 CE'
-        if self.word:
-            return self.months[int(self.month)] + ' ' + self.day + self.__dayh(str(self.day)[-1]) + ', ' + self.year
-        return self.day + self.format[2] + self.month + self.format[5] +self.year
+        
+        if self.__word:
+            return self.months[int(self.__month)] + ' ' + self.__day + self.__dayh(str(self.__day)[-1]) + ', ' + self.__year
+        return self.__day + self.format[2] + self.__month + self.format[5] +self.__year
     
-    def validate(self,dd,mm,yy):
+    def __validate(self,dd,mm,yy):
         dd, mm, yy = dd,mm,yy
         
         ####validations follow####
@@ -61,12 +62,61 @@ class date:
         return str(dd),str(mm),str(yy)
         
     
-    def evaluate_date(self):
-        if len(self.day) != 2:
-            self.day = '0' + self.day
-        if len(self.month) != 2:
-            self.month = '0' + self.month
-    #def to_datetime(self,string, format='%d%m%y'):
-
-##x = date(29,2,1992, format='%d.%m.%y', word=True)
-##print(x)
+    def __evaluate_date(self):
+        if len(self.__day) != 2:
+            self.__day = '0' + self.__day
+        if len(self.__month) != 2:
+            self.__month = '0' + self.__month
+    
+    
+    def toggle_word(self):
+        if self.__word:
+            self.__word = False
+        else:
+            self.__word = True
+            
+        return self
+    
+    def __getitem__(self, key):
+        """
+        Key reference:-
+            name  | key 
+            -------------
+            day   | 'd', 'day', 0
+            month | 'm', 'month', 1
+            year  | 'y', 'year', 2
+        """
+        if key in ['d', 0, 'day', -3]:
+            return self.__day
+        elif key in ['m', 1, 'month', -2]:
+            return self.__month
+        elif key in ['y', 2, 'year', -1]:
+            return self.__year
+        else:
+            raise ValueError("Key value is wrong.")
+        
+        
+    def __setitem__(self, key, value):
+        """
+         Key reference:-
+            name  | key 
+            -------------
+            day   | 'd', 'day', 0
+            month | 'm', 'month', 1
+            year  | 'y', 'year', 2
+        """
+        d = int(self.__day)
+        m = int(self.__month)
+        y = int(self.__year)
+        
+        if key in ['d', 0, 'day', -3]:
+            self.__day, self.__month, self.__year = self.__validate(value, m, y)
+        elif key in ['m', 1, 'month', -2]:
+            self.__day, self.__month, self.__year = self.__validate(d, value, y)
+        elif key in ['y', 2, 'year', -1]:
+            self.__day, self.__month, self.__year = self.__validate(d, m, value)
+        else:
+            raise ValueError("Key value is wrong.")
+        
+        self.__evaluate_date()
+        
