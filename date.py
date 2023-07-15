@@ -1,17 +1,33 @@
+### custom date class
 class date:
     months = ['default','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October'\
              ,'November', 'December']
         
-    def __init__(self,day=0,month=0,year=0,format='%d/%m/%y', word=False):
-        assert type(day) == type(1), "day must be an integer"
-        assert type(month) == type(1), "month must be an integer"
-        assert type(year) == type(1), "year must be an integer"
+    def __init__(self,_1=0, _2=0, _3=0,format='%d/%m/%y', word=False):
+        assert type(_1) == type(1), "Error: must be an integer"
+        assert type(_2) == type(1), "Error: must be an integer"
+        assert type(_3) == type(1), "Error: must be an integer"
 
         assert type(format) == type("string"), "format parameter must be a string"
         assert len(format) == 8, "length of format parameter must be 8 characters"
+        
+        f = format
+        import re #import regex
+
+        # creating our list of indices from format 
+        f = re.split("\W", f)
+
+        # format assertions
+        assert f[1] in ['d', 'm', 'y'], "format string wrong. check index 1"
+        assert f[3] in ['d', 'm', 'y'], "format string wrong. check index 3"
+        assert f[5] in ['d', 'm', 'y'], "format string wrong. check index 5"
+        
+        # dictionary for reference
+        d = {f[1]: _1, f[3]: _2, f[5]: _3}
+        
 
 
-        self.__day, self.__month, self.__year = self.__validate(day,month,year)
+        self.__day, self.__month, self.__year = self.__validate(d['d'], d['m'], d['y'])
         self.format = format
         self.__word = word
         
@@ -32,7 +48,12 @@ class date:
         
         if self.__word:
             return self.months[int(self.__month)] + ' ' + self.__day + self.__dayh(str(self.__day)[-1]) + ', ' + self.__year
-        return self.__day + self.format[2] + self.__month + self.format[5] +self.__year
+        else:
+            string = self.format
+            string = string.replace("%d", str(self.__day))
+            string = string.replace("%m", str(self.__month))
+            string = string.replace("%y", str(self.__year))
+            return string
     
     def __validate(self,dd,mm,yy):
         
