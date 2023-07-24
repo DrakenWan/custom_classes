@@ -64,6 +64,8 @@ class date:
         if len(str(mm)) > 2:
             raise ValueError('Invalid month value. Length exceeded.')
         
+        if yy < 0:
+            raise ValueError('Values of year only start from 0 CE.') # can be adjusted for later
         # if len(str(yy)) < 4:
         #     raise ValueError('Invalid year value. Length exceeded.')
             
@@ -170,3 +172,31 @@ class date:
         newd = date(int(d), int(m), int(y), format=format)
 
         return newd
+    
+
+    ### some utils. still testing these
+    def addYear(shift=1):
+        assert type(shift) == type(1), "Value has to be integer."
+
+        yy = self.__year + shift
+        if yy < 0:
+            raise ValueError("Shift is exceeded limit. raised negative year value.")
+        else:
+            self.__year += shift
+
+    def addMonth(shift=1):
+
+        """
+        note: 07192023
+            this one looks counter intuitive as months are 'sort of' cyclical and repeat every year. So if limit exceeds the 12 then
+            I must reflect the change in year variable to show that if shifti s more than 12 then I must shift to 1st month of next
+        """
+        assert type(shift) == type(1), "value has to be integer"
+
+        mm = self.__month + shift
+
+        if mm < 1 or mm > 12:
+            raise ValueError("Shift exceeded boundary limit of [1,12].")
+        else:
+            self.__month += shift
+    
